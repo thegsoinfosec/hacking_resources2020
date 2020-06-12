@@ -1,0 +1,94 @@
+==============================================================
+IPP Sec's method on how to create a custom wordlist using hashcat
+=================================================================
+
+https://www.4armed.com/blog/hashcat-crack-md5-hashes/
+
+How to create a custom pw list
+
+#make a directory for your wordlists
+
+mkdir wordlists
+
+#open a txt editor and type some common passwords, easons the months of the year and the year
+
+such as
+
+January 
+Febuary
+March
+Spring
+Summer
+Fall
+2019
+2020
+football
+password
+password1
+
+and etc..
+
+then,
+
+#use a Bash for loop in the cmd line to add extra chars and mix it up
+
+for i in $(cat custom.txt); do echo $i; echo ${i}2019; echo ${i}2020; done
+
+#scroll through it..looks good??
+#then do the loop once more and output the loop to t
+
+for i in $(cat custom.txt); do echo $i; echo ${i}2019; echo ${i}2020; done > t
+
+#then move the t to the name of your pw list
+
+mv t custom.txt
+
+#then add the hashcat best64 rule
+
+hashcat --force --stdout custom1.txt -r /usr/share/hashcat/rules/best64.rule
+
+#check the word count
+
+hashcat --force --stdout custom1.txt -r /usr/share/hashcat/rules/best64.rule | wc -l
+
+#add the toggeles rule to mess with characters mix it up more combos
+
+hashcat --force --stdout custom1.txt -r /usr/share/hashcat/rules/best64.rule -r /usr/share/hashcat/rules/toggles1.rule
+
+#chk wrd count if you want
+
+hashcat --force --stdout custom1.txt -r /usr/share/hashcat/rules/best64.rule -r /usr/share/hashcat/rules/toggles1.rule | sort -u | wc -l
+
+# And augment pw lenth too with the Mighty power of AWK!!!
+
+hashcat --force --stdout custom1.txt -r /usr/share/hashcat/rules/best64.rule -r /usr/share/hashcat/rules/toggles1.rule | sort -u | awk 'length($0) > 8'
+
+
+#then send the list to t
+
+hashcat --force --stdout rockyou2.txt -r /usr/share/hashcat/rules/best64.rule -r /usr/share/hashcat/rules/toggles1.rule | sort -u | awk 'length($0) > 8' > t
+
+cat t
+
+cp t custom1.txt
+
+#and cat it to check
+
+cat custom1.txt
+
+
+# & BOOM youre done!
+
+
+
+
+
+
+
+
+
+
+
+
+
+

